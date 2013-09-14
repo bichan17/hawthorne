@@ -1,28 +1,24 @@
-# this is a project
-this area left intentionally blank
+# hawthorne
+my base grunt project
 
-first real run-through with grunt
-
+zapo
 
 
 my grunt should...
-  compile my sass √
-    grunt-contrib-compass
+- compile my sass √
+  grunt-contrib-compass
 
-  watch for changes √
-    grunt-contrib-watch
+- watch for changes √
+  grunt-contrib-watch
 
-  run a server √
+- copy over files √
+  grunt-contrib-copy
 
-  copy over files √
-    grunt-contrib-copy
-
-  compile my JS *
-    contrib-jshint
+- compile my JS *
+  contrib-jshint
 
 
-
-others in nurun stack
+in the works
 -clean
 -clear
 -jade

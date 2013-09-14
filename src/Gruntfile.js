@@ -35,6 +35,10 @@ module.exports = function(grunt) {
       css:{
         files: ['style/*.scss'],
         tasks:['compass:debug']
+      },
+      html:{
+        files: ['*.html'],
+        tasks: ['copy:debug']
       }
     },
 

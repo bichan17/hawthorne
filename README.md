@@ -1,7 +1,7 @@
 # hawthorne
 my base grunt project
 
-zapo
+- zapo
 
 
 my grunt should...
@@ -18,9 +18,13 @@ my grunt should...
   contrib-jshint
 
 
-in the works
--clean
--clear
--jade
--doccoh
-yui-compressor
+### included:
+- font awesome
+
+
+##### in the works
+- clean
+- clear
+- jade
+- doccoh
+- yui-compressor

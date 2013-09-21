@@ -54,22 +54,12 @@ module.exports = function(grunt) {
     copy: {
       debug: {
         files: [
-          {
-            expand: true,
-            src: ['*.html'],
-            dest: '../build/debug',
-            filter: 'isFile'
-          }
+          {expand: true, src: ['*.html'], dest: '../build/debug', filter: 'isFile'}
         ]
       },
       deploy: {
         files: [
-          {
-            expand: true,
-            src: ['*.html'],
-            dest: '../build/deploy',
-            filter: 'isFile'
-          }
+          {expand: true, src: ['*.html'], dest: '../build/deploy', filter: 'isFile'}
         ]
       }
     },

@@ -33,7 +33,7 @@ module.exports = function(grunt) {
     // minify to 1 js file
     min: {
       dist : {
-        src: ['js/*.js'],
+        src: ['js/*.js', 'js/main.js'],
         dest: '../build/debug/js/main.min.js'
       }
     },

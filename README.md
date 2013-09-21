@@ -34,5 +34,10 @@ the site will get built in the '''build/deploy''' directory.
 
 ##### in the works
 - clean
+why include it? let's say we mis-name a file: exmaple.json.
+and let's say we didn't catch the initial mistake.
+if you work with that file while grunt is running then it will copied over to the debug folder. for the json example it would be 'build/debug/data/exmaple.json'
+once we correct the mistake the correct file will be copied over but we will still have that mis-named json file. clean would make sure the directory we are delivering to is clean of any files that shouldn't be there.
+
 - clear
 - doccoh

@@ -30,7 +30,7 @@ module.exports = function(grunt) {
       }
     },
 
-    // watch JS files
+    // minify to 1 js file
     min: {
       dist : {
         src: ['js/*.js'],
@@ -51,6 +51,10 @@ module.exports = function(grunt) {
       js:{
         files: ['js/*.js'],
         tasks: ['min:dist']
+      },
+      json:{
+        files: ['data/*.json'],
+        tasks: ['copy:debug']
       }
     },
 
@@ -127,7 +131,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
-
+  grunt.loadNpmTasks('grunt-yui-compressor');
 
 
 

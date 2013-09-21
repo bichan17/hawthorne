@@ -3,8 +3,11 @@ my base grunt project
 
 - zapo
 
+## getting started
+'''cd''' to the '''src/''' directory and run '''grunt watch'''.
 
-my grunt should...
+
+### what it does..
 - compile my sass √
   grunt-contrib-compass
 
@@ -14,17 +17,19 @@ my grunt should...
 - copy over files √
   grunt-contrib-copy
 
-- compile my JS *
-  contrib-jshint
+- compile my JS √
+  yui-compressor
 
 
 ### included:
 - font awesome
-
+(jquery to be added)
 
 ##### in the works
+make the copy function more efficient
+
 - clean
 - clear
-- jade
 - doccoh
-- yui-compressor
+
+

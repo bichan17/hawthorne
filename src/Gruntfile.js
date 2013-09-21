@@ -46,28 +46,34 @@ module.exports = function(grunt) {
       },
       html:{
         files: ['*.html'],
-        tasks: ['copy:debug']
+        tasks: ['copy:html']
       },
       js:{
         files: ['js/*.js'],
         tasks: ['min:dist']
       },
       json:{
-        files: ['data/*.json'],
-        tasks: ['copy:debug']
+        files: ['data/*.*'],
+        tasks: ['copy:data']
       }
     },
 
     // copy files
     copy: {
-      debug: {
+      html: {
         files: [
           {expand: true, src: ['*.html'], dest: '../build/debug', filter: 'isFile'}
         ]
       },
+      data: {
+        files: [
+          {expand: true, src: ['data/*.*'], dest: '../build/debug/data', filter: 'isFile'}
+        ]
+      },
       deploy: {
         files: [
-          {expand: true, src: ['*.html'], dest: '../build/deploy', filter: 'isFile'}
+          {expand: true, src: ['*.html'], dest: '../build/deploy', filter: 'isFile'},
+          {expand: true, src: ['data/*.*'], dest: '../build/deploy/data', filter: 'isFile'}
         ]
       }
     },

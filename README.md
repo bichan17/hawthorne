@@ -3,8 +3,12 @@ my base grunt project
 
 - zapo
 
+
 ## getting started
 '''cd''' to the '''src/''' directory and run '''grunt watch'''.
+the site will get built in the '''build/deploy''' directory.
+
+
 
 
 ### what it does..
@@ -25,11 +29,10 @@ my base grunt project
 - font awesome
 (jquery to be added)
 
-##### in the works
-make the copy function more efficient
 
+
+
+##### in the works
 - clean
 - clear
 - doccoh
-
-

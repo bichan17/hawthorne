@@ -30,6 +30,14 @@ module.exports = function(grunt) {
       }
     },
 
+    // watch JS files
+    min: {
+      dist : {
+        src: ['js/*.js'],
+        dest: '../build/debug/js/main.min.js'
+      }
+    },
+
     // watch file changes
     watch: {
       css:{

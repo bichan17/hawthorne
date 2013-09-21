@@ -47,6 +47,10 @@ module.exports = function(grunt) {
       html:{
         files: ['*.html'],
         tasks: ['copy:debug']
+      },
+      js:{
+        files: ['js/*.js'],
+        tasks: ['min:dist']
       }
     },
 

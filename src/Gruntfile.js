@@ -55,6 +55,10 @@ module.exports = function(grunt) {
       json:{
         files: ['data/*.*'],
         tasks: ['copy:data']
+      },
+      img:{
+        files: ['img/*.*'],
+        tasks: ['copy:img']
       }
     },
 
@@ -67,13 +71,19 @@ module.exports = function(grunt) {
       },
       data: {
         files: [
-          {expand: true, src: ['data/*.*'], dest: '../build/debug/data', filter: 'isFile'}
+          {expand: true, src: ['data/*.*'], dest: '../build/debug', filter: 'isFile'}
+        ]
+      },
+      img: {
+        files: [
+          {expand: true, src: ['img/*.*'], dest: '../build/debug', filter: 'isFile'}
         ]
       },
       deploy: {
         files: [
           {expand: true, src: ['*.html'], dest: '../build/deploy', filter: 'isFile'},
-          {expand: true, src: ['data/*.*'], dest: '../build/deploy/data', filter: 'isFile'}
+          {expand: true, src: ['data/*.*'], dest: '../build/deploy', filter: 'isFile'},
+          {expand: true, src: ['img/*.*'], dest: '../build/deploy', filter: 'isFile'}
         ]
       }
     },

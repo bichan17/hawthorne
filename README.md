@@ -1,18 +1,17 @@
-# hawthorne
-my base grunt project
+# hawthorne base grunt project
 
 - zapo
 
 
 ## getting started
 '''cd''' to the '''src/''' directory and run '''grunt watch'''.
-the site will get built in the '''build/deploy''' directory.
+the site will get built in the '''build/debug''' directory.
 
 
 
 
 ### what it does..
-- compile my sass √
+- compile sass √
   grunt-contrib-compass
 
 - watch for changes √
@@ -20,14 +19,15 @@ the site will get built in the '''build/deploy''' directory.
 
 - copy over files √
   grunt-contrib-copy
+  copies over all HTML files, anything placed in an 'img' directory
 
-- compile my JS √
+- compile JS √
   yui-compressor
 
 
 ### included:
 - font awesome
-(jquery to be added)
+- jquery
 
 
 

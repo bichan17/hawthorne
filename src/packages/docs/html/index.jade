@@ -1,0 +1,27 @@
+include ../../base/html/jade-helpers.jade
+!!! 5
+head
+  title Project Docs
+  meta(name="description", content="Project documentation")
+  include ../../base/html/head.jade
+
+body#docs-home
+  a(href="#main", class="assistive-text") Skip to main content
+  div.container
+    div.wrapper
+      header
+        h1.t7 Project Documentation
+        //- include doc-navigation.jade
+
+      section#main
+        h2.t5 Approach
+        p A website is typically made of individual parts that we see repeated consistently (headers, footers, navigation), as such each 'part' of the website has been modularized.
+        p All modules are located within <strong>src/packages/</strong>. They are all self-contained structures that are used to build full pages.
+        p This project assumes that you as a developer are comfortable with:
+          span the command line &nbsp;
+          span git &nbsp;
+          span sass &nbsp;
+          span jade &nbsp;
+
+  include ../../base/html/foot.jade
+</html>

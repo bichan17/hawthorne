@@ -1,0 +1,22 @@
+include ../base/html/jade-helpers.jade
+!!! 5
+head
+  title Homepage | Site Name
+  meta(name="description", content="Site homepage")
+  include ../../base/html/head.jade
+  //- +add_css_modules
+
+body#homepage
+  a(href="#main", class="assistive-text") Skip to main content
+  div.container
+    include ../modules/header-footer/html/header.jade
+
+    section#main
+      div.wrapper
+        h2.t5 Homepage
+        p This would be the site's homepage. The header and footer come from their own respective modules.
+
+    include ../modules/header-footer/html/footer.jade
+
+  include ../../base/html/foot.jade
+</html>

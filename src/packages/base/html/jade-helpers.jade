@@ -1,0 +1,7 @@
+mixin css_module(fileName)
+  url = "style/modules/"+fileName+".css"
+  link(rel="stylesheet", href=url)
+
+mixin js_module(fileName)
+  url = "js/modules/"+fileName+".js"
+  script(src=url)

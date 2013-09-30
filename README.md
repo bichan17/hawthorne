@@ -1,43 +1,29 @@
-# hawthorne base grunt project
+# Hawthorne
 
-- zapo
-
-
-## getting started
-'''cd''' to the '''src/''' directory and run '''grunt watch'''.
-the site will get built in the '''build/debug''' directory.
+Base grunt project for front-end web development.
 
 
+### What It Does
+- compile sass to css
+- compile jade files to html
+- copies over font files and images
+- watch for changes to recompile new code
+- (to be added: require.js)
 
 
-### what it does..
-- compile sass √
-  grunt-contrib-compass
-
-- watch for changes √
-  grunt-contrib-watch
-
-- copy over files √
-  grunt-contrib-copy
-  copies over all HTML files, anything placed in an 'img' directory
-
-- compile JS √
-  yui-compressor
+### Getting Started
+cd to the src/ directory.
+run 'grunt'
+This will build the project, meaning it will compile your .jade files, scss files, copy images and font files to a 'build/debug' directory.
 
 
-### included:
-- font awesome
+### Stack
+The following libraries/frameworks/files are included
 - jquery
+- modernizr
+- font awesome
+- normalize.css
 
 
-
-
-##### in the works
-- clean
-why include it? let's say we mis-name a file: exmaple.json.
-and let's say we didn't catch the initial mistake.
-if you work with that file while grunt is running then it will copied over to the debug folder. for the json example it would be 'build/debug/data/exmaple.json'
-once we correct the mistake the correct file will be copied over but we will still have that mis-named json file. clean would make sure the directory we are delivering to is clean of any files that shouldn't be there.
-
-- clear
-- doccoh
+##### To be added
+require.js for modular JS development

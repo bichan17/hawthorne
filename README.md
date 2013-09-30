@@ -1,6 +1,6 @@
 # Hawthorne
 
-Base grunt project for front-end web development.
+Base grunt project for larger scale front-end web development.
 
 
 ### What It Does
@@ -14,7 +14,10 @@ Base grunt project for front-end web development.
 ### Getting Started
 cd to the src/ directory.
 run 'grunt'
-This will build the project, meaning it will compile your .jade files, scss files, copy images and font files to a 'build/debug' directory.
+This will build the project and project documentation. At the top level you should now see src/, build/, and docs/.
+
+run 'grunt watch'
+When doing development this will watch for any file changes and compile the new source
 
 
 ### Stack

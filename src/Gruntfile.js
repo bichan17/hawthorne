@@ -59,7 +59,7 @@ module.exports = function(grunt) {
       deploy_modules:{
         options:{
           cssDir: '../build/deploy/css/modules',
-          importPath: 'packages/common/css',
+          importPath: 'packages/base/css',
           outputStyle: 'compressed',
           noLineComments: true,
           force: true,

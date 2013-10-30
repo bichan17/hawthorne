@@ -285,7 +285,7 @@ module.exports = function(grunt) {
       module_img: {
         files: ['modules/**/img/*.*'],
         tasks: ['assets']
-      }
+      },
       base_js:{
         files: ['js/*.js', 'js/**/*.js'],
         tasks: ['copy:js']
@@ -331,7 +331,7 @@ module.exports = function(grunt) {
     grunt.task.run([
       'clean:debug',
       'compass:build',
-      'compass:debug_modules',
+      'css',
       'copy:font',
       'copy:debug_modules',
       'jade:debug_pages',
@@ -436,29 +436,29 @@ module.exports = function(grunt) {
       })
       grunt.task.run(path);
     });
-  }
+  });
 
 
   // ----------------------------
   // watch a specfic module
 
-  grunt.registerTask('w', function(module) {
-    module = module || '**';
+  // grunt.registerTask('w', function(module) {
+  //   module = module || '**';
 
-        // check html
-    var watch_html = ['modules/'+module+'/html/*.jade', 'modules/'+module+'/html/*.json'],
-        // check js
-        watch_js = ['modules/'+module+'/js/*.js'],
-        // check style
-        watch_style = ['modules/'+module+'/style/*.scss'],
-        // check imgs
-        watch_imgs = ['modules/'+module+'/img/*.*'];
+  //       // check html
+  //   var watch_html = ['modules/'+module+'/html/*.jade', 'modules/'+module+'/html/*.json'],
+  //       // check js
+  //       watch_js = ['modules/'+module+'/js/*.js'],
+  //       // check style
+  //       watch_style = ['modules/'+module+'/style/*.scss'],
+  //       // check imgs
+  //       watch_imgs = ['modules/'+module+'/img/*.*'];
 
-    var html_task = ['html:'+module],
-        js_task = ['js:'+module],
-        style_task = ['css:'+module],
-        img_task = ['assets:'+module];
+  //   var html_task = ['html:'+module],
+  //       js_task = ['js:'+module],
+  //       style_task = ['css:'+module],
+  //       img_task = ['assets:'+module];
 
-    // unfinished
-  });
+  //   // unfinished
+  // });
 };

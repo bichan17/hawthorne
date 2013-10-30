@@ -1,5 +1,91 @@
 module.exports = function(grunt) {
 
+  var jadedebug = {
+    compileDebug: false,
+    pretty: true,
+
+    data:{
+      partial: function(templatePath, dataObj){
+        var template = grunt.file.read(templatePath);
+
+        if(typeof(dataObj) === String){
+          dataObj = grunt.file.readJSON(dataObj);
+        }
+
+        if(templatePath.match(/.jade/g)){
+          return require('grunt-contrib-jade/node_modules/jade').compile(template, {filename: templatePath, pretty: true})(dataObj);
+        }else{
+          return template;
+        }
+      },
+      data: function(path){
+        return grunt.file.readJSON(path);
+      },
+      locals:{
+        getConfigFile:function(path){
+          return grunt.file.readJSON(path);
+        },
+        demos:function(){
+          return grunt.file.expand('modules/**/demo/*.jade').map(function(a){
+            return a.split('/').pop().replace(/.jade/g, '.html')
+          }).filter(function(a){
+            return a.match(/-demo.html/g)});
+        },
+        data: function(path){
+          return jadeconfig.data.data(path);
+        },
+        partial: function(templatePath, dataObj){
+          return jadeconfig.data.partial(templatePath, dataObj);
+        }
+
+      }
+    }
+  }
+  var jadedeploy = {
+
+    compileDebug: false,
+    pretty: false,
+
+    data:{
+      partial: function(templatePath, dataObj){
+        var template = grunt.file.read(templatePath);
+
+        if(typeof(dataObj) === String){
+          dataObj = grunt.file.readJSON(dataObj);
+        }
+
+        if(templatePath.match(/.jade/g)){
+          return require('grunt-contrib-jade/node_modules/jade').compile(template, {filename: templatePath, pretty: false})(dataObj);
+        }else{
+          return template;
+        }
+      },
+      data: function(path){
+        return grunt.file.readJSON(path);
+      },
+      locals:{
+        getConfigFile:function(path){
+          return grunt.file.readJSON(path);
+        },
+        demos:function(){
+          return grunt.file.expand('modules/**/demo/*.jade').map(function(a){
+            return a.split('/').pop().replace(/.jade/g, '.html')
+          }).filter(function(a){
+            return a.match(/-demo.html/g)});
+        },
+        data: function(path){
+          return jadeconfig.data.data(path);
+        },
+        partial: function(templatePath, dataObj){
+          return jadeconfig.data.partial(templatePath, dataObj);
+        }
+
+      }
+    }
+  }
+
+
+
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -20,33 +106,32 @@ module.exports = function(grunt) {
 
     // compile SASS files
     compass: {
-      debug_base:{
-        options:{
-          sassDir: 'packages/base/style',
+      build: {
+        options: {
+          sassDir: 'style',
           cssDir: '../build/debug/style',
           outputStyle: 'expanded',
-          noLineComments: false,
+          noLineComments: true,
           force: true,
           relativeAssets: true,
           images: '../build/debug/img',
           environment: 'development'
         }
       },
-      debug_modules:{
-        options:{
-          cssDir: '../build/debug/style/modules',
-          importPath: 'packages/base/style',
+      debug_modules: {
+        options: {
+          cssDir: '../build/debug/style',
           outputStyle: 'expanded',
-          noLineComments: false,
+          noLineComments: true,
           force: true,
           relativeAssets: true,
           images: '../build/debug/img',
           environment: 'development'
         }
       },
-      deploy_base:{
-        options:{
-          sassDir: 'packages/base/style',
+      deploy: {
+        options: {
+          sassDir: 'style',
           cssDir: '../build/deploy/style',
           outputStyle: 'compressed',
           noLineComments: true,
@@ -56,10 +141,9 @@ module.exports = function(grunt) {
           environment: 'production'
         }
       },
-      deploy_modules:{
-        options:{
-          cssDir: '../build/deploy/css/modules',
-          importPath: 'packages/base/css',
+      deploy_modules: {
+        options: {
+          cssDir: '../build/deploy/style',
           outputStyle: 'compressed',
           noLineComments: true,
           force: true,
@@ -70,7 +154,7 @@ module.exports = function(grunt) {
       },
       docs:{
         options:{
-          sassDir: 'packages/docs/style',
+          sassDir: 'docs/style',
           cssDir: '../docs/style',
           outputStyle: 'compressed',
           noLineComments: true,
@@ -82,14 +166,20 @@ module.exports = function(grunt) {
       }
     },
 
-    // copy files (font, js)
+
+    // copy files (font, img, js)
     copy: {
-      debug_base : {
-        files : [
-          {expand: true, cwd: 'packages/base/fonts', src: ['**'], dest: '../build/debug/fonts'},
-          {expand: true, cwd: 'packages/base/img', src: ['**'], dest: '../build/debug/img'},
-          {expand: true, cwd: 'packages/base/js', src: ['**'], dest: '../build/debug/js'}
-        ]
+      font: {
+        files: [{expand: true, cwd: 'style/fonts', src:['**'], dest: '../build/debug/style/fonts'}]
+      },
+      img: {
+        files : [{expand: true, cwd: 'img', src: ['**'], dest: '../build/debug/img'}]
+      },
+      module_img: {
+        files: [{expand: true, src: ['**']}]
+      },
+      js: {
+        files : [{expand: true, cwd: 'js', src: ['**'], dest: '../build/debug/js'}]
       },
       debug_modules : {
        // go through every module folder
@@ -97,110 +187,121 @@ module.exports = function(grunt) {
           var module, array = [];
 
           // copy all imgs
-          grunt.file.expand('packages/modules/**/img/').forEach(function(path) {
+          grunt.file.expand('modules/**/img/').forEach(function(path) {
             module = path.split('/')[2];
             array.push({expand: true, cwd: path, src: ['**'], dest: '../build/debug/img/'+module+'/'});
           });
 
           // copy all js
-          grunt.file.expand('packages/modules/**/js/').forEach(function(path) {
+          grunt.file.expand('modules/**/js/').forEach(function(path) {
             module = path.split('/')[2];
-            array.push({expand: true, cwd: path, src: ['**'], dest: '../build/debug/js/modules/'+module+'/'});
+            array.push({expand: true, cwd: path, src: ['**'], dest: '../build/debug/js/modules/'});
           });
           return array;
         }
       },
-      deploy_base : {
-        files : [
-          {expand: true, cwd: 'packages/base/fonts', src: ['**'], dest: '../build/deploy/fonts'},
-          {expand: true, cwd: 'packages/base/img', src: ['**'], dest: '../build/deploy/img'},
-          {expand: true, cwd: 'packages/base/js', src: ['**'], dest: '../build/deploy/js'}
-        ]
-      },
-      deploy_modules : {
+      deploy : {
         files : function() {
           var module, array = [];
 
-          // copy imgs
-          grunt.file.expand('packages/modules/**/img/').forEach(function(path) {
+          array.push({expand: true, cwd: 'style/fonts', src:['**'], dest: '../build/deploy/style/fonts'});
+          array.push({expand: true, cwd: 'img', src: ['**'], dest: '../build/deploy/img'});
+          array.push({expand: true, cwd: 'js', src: ['**'], dest: '../build/deploy/js'});
+
+          // copy imgs // JS is handled elsewhere
+          grunt.file.expand('modules/**/img/').forEach(function(path) {
             module = path.split('/')[2];
             array.push({expand: true, cwd: path, src: ['**'], dest: '../build/deploy/img/'+module+'/'});
           });
+
           return array;
         }
       },
       docs : {
         files: [
-          {expand: true, cwd: 'packages/docs/img', src: ['**'], dest: '../docs/img'},
-          {expand: true, cwd: 'packages/docs/js', src: ['**'], dest: '../docs/js'}
+          {expand: true, cwd: 'docs/img', src: ['**'], dest: '../docs/img'},
+          {expand: true, cwd: 'docs/js', src: ['**'], dest: '../docs/js'}
         ]
       }
     },
+
 
     // compile jade files
     jade: {
-      debug_modules: {
-        options: {data: {debug: false}},
-        files:[
-          {expand:true, cwd:'packages/modules/', src:['**/demo/*.jade'], dest:'../build/debug/', ext:'.html', flatten:true}
+      index: {
+        options: jadedebug,
+        files: [{expand: true, cwd: './', src: ['*.jade'], dest: '../build/debug', ext: '.html', flatten: true }]
+      },
+      modules: {
+        options: jadedebug,
+        files: [
+          {expand: true, cwd: 'modules', src: '**/demo/*.jade', dest: '../build/debug', ext: '.html', flatten: true }
         ]
       },
       debug_pages: {
-        options: {data: {debug: false}},
-        files:[
-          {expand:true, cwd:'packages/pages/', src:['*.jade'], dest:'../build/debug/', ext:'.html', flatten:true}
-        ]
-      },
-      deploy_modules: {
-        options: {data: {debug: false}},
-        files:[
-          {expand:true, cwd:'packages/modules/', src:['**/demo/*.jade'], dest:'../build/deploy/', ext:'.html', flatten:true}
-        ]
+        options: jadedebug,
+        files: [{expand: true, cwd: 'pages', src: '*.jade', dest: '../build/debug', ext: '.html', flatten: true}]
       },
       deploy_pages: {
-        options: {data: {debug: false}},
-        files:[
-          {expand:true, cwd:'packages/pages/', src:['*.jade'], dest:'../build/deploy/', ext:'.html', flatten:true}
+        options: jadedeploy,
+        files: [{expand: true, cwd: 'pages', src: '*.jade', dest: '../build/deploy', ext: '.html', flatten: true}]
+      },
+      deploy: {
+        options: jadedeploy,
+        files: [
+          {expand: true, cwd: './', src: ['*.jade'], dest: '../build/deploy', ext: '.html', flatten: true },
+          {expand: true, cwd: 'modules', src: '**/demo/*.jade', dest: '../build/deploy', ext: '.html', flatten: true }
         ]
       },
       docs: {
-        options: {data: {debug: false}},
-        files:[
-          {expand:true, cwd:'packages/docs/', src:['html/*.jade'], dest:'../docs', ext:'.html', flatten:true}
-        ]
+        options: jadedebug,
+        files:[{expand:true, cwd:'docs/', src:['html/*.jade'], dest:'../docs', ext:'.html', flatten:true}]
       }
     },
-
 
 
     // watch file changes
     watch: {
-      base: {
-        files: ['packages/base/**/*.*'],
-        tasks: ['base']
+      base_sass: {
+        files: ['style/*.scss','style/**/*.scss'],
+        tasks: ['compass:build']
       },
-      css: {
-        files: ['packages/modules/**/style/*.scss'],
+      module_sass: {
+        files: ['modules/**/style/*.scss'],
         tasks: ['css']
       },
-      docs: {
-        files: ['packages/docs/**/*.*'],
-        tasks: ['docs']
+      base_jade: {
+        files: ['html/*.jade','*.jade'],
+        tasks: ['jade:index']
       },
-      html: {
-        files: ['packages/base/html/*.jade','packages/modules/**/demo/*.jade','packages/modules/**/html/*.jade','packages/modules/**/html/*.json'],
+      module_jade: {
+        files: ['modules/**/demo/*.jade','modules/**/html/*.jade','modules/**/data/*.json'],
         tasks: ['html']
       },
+      base_img: {
+        files: ['img/*.*'],
+        tasks: ['copy:img']
+      },
+      module_img: {
+        files: ['modules/**/img/*.*'],
+        tasks: ['assets']
+      }
+      base_js:{
+        files: ['js/*.js', 'js/**/*.js'],
+        tasks: ['copy:js']
+      },
+      docs: {
+        files: ['docs/**/*.*'],
+        tasks: ['docs']
+      },
       pages: {
-        files: ['packages/pages/*.jade'],
+        files: ['pages/*.jade'],
         tasks: ['pages']
       },
-      img: {
-        files: ['packages/modules/**/img/*.*'],
-        tasks: ['assets']
-      }//,
+
+      //,
       // js:{
-      //   files: ['packages/modules/**/js/*.js'],
+      //   files: ['modules/**/js/*.js'],
       //   tasks: ['js']
       // }
     }
@@ -224,45 +325,33 @@ module.exports = function(grunt) {
 
   // Default task(s)
   // ===================================
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('default', ['debug']);
 
-  // build all modules/pages, or individual modules/pages
-  // default -> debug/
-  grunt.registerTask('build', function(module) {
-    // var module = module ? ":"+ module : "";
-    var mode = grunt.option('deploy') ? 'deploy' : 'debug';
-
+  grunt.registerTask('debug', function() {
     grunt.task.run([
-      'clean:'+mode,
-      'compass:'+mode+'_base',
-      'compass:'+mode+'_modules',
-      'copy:'+mode+'_base',
-      'copy:'+mode+'_modules',
-      'jade:'+mode+'_pages',
-      'jade:'+mode+'_modules',
+      'clean:debug',
+      'compass:build',
+      'compass:debug_modules',
+      'copy:font',
+      'copy:debug_modules',
+      'jade:debug_pages',
+      'jade:modules',
+      'jade:index',
       'docs'
     ]);
   });
 
-  grunt.registerTask('debug', function() {
-    grunt.option('deploy', false);
-    grunt.run.task('build');
-  });
-
   grunt.registerTask('deploy', function() {
-    grunt.option('deploy', true);
-    grunt.run.task('build');
-  })
-
-  // compile stuff in 'base'
-  grunt.registerTask('base', 'copy files, compile CSS and JS', function() {
-    var mode = grunt.option('deploy') ? 'deploy' : 'debug';
-
     grunt.task.run([
-      'compass:'+mode+'_base',
-      'copy:'+mode+'_base'
+      'clean:deploy',
+      'compass:deploy',
+      'compass:deploy_modules',
+      'copy:deploy',
+      'jade:deploy_pages',
+      'jade:deploy',
+      'docs'
     ]);
-  });
+  })
 
   // compile stuff in 'docs'
   grunt.registerTask('docs', 'update docs/ folder', function() {
@@ -277,13 +366,14 @@ module.exports = function(grunt) {
   // ----------------------------
   // can be module specfic, ex. grunt html:article-view
 
+
   // compile SCSS changes
   grunt.registerTask('css', function(module) {
     module = module || '**';
     var mode = grunt.option('deploy') ? 'deploy' : 'debug';
 
     // go through every module, or the one passed
-    grunt.file.expand('packages/modules/'+module+'/style').forEach(function(path) {
+    grunt.file.expand('modules/'+module+'/style').forEach(function(path) {
       grunt.registerTask(path, function() {
         // set the sassDir for each module
         grunt.config('compass.'+mode+'_modules.options.sassDir', path);
@@ -295,19 +385,30 @@ module.exports = function(grunt) {
     });
   });
 
+
   // compile JADE files in modules
   grunt.registerTask('html', function(module) {
     module = module || '**';
-    var mode = grunt.option('deploy') ? 'deploy' : 'debug';
-    var array = [];
+    var env = grunt.option('deploy') ? 'deploy' : 'debug';
+    var modules = [];
 
-    grunt.file.expand('packages/modules/'+module+'/demo').forEach(function(path) {
-      array.push({expand:true, cwd:path, src:['*.jade'], dest:'../build/'+ mode, ext:'.html', flatten:true});
+    // for each file in 'modules/**/demo/'
+    grunt.file.expand('modules/'+module+'/demo/').forEach(function(path){
+      mod = path.split('/')[2];
+      modules.push(
+        {expand:true,
+        cwd: path,
+        src: ['*.jade'],
+        dest: '../build/'+ env,
+        ext: '.html',
+        flatten: true}
+      )
     });
 
-    grunt.config('jade.'+mode+'_modules.files', array);
-    grunt.task.run('jade:'+mode+'_modules');
+    grunt.config('jade.modules.files', modules);
+    grunt.task.run('jade:modules');
   });
+
 
   // compile JADE files in pages/
   grunt.registerTask('pages', function() {
@@ -323,13 +424,19 @@ module.exports = function(grunt) {
     module = module || '**';
     var mode = grunt.option('deploy') ? 'deploy' : 'debug';
 
-    // grunt.file.expand('packages/modules/'+module+'/folderName').forEach(function(path) {
-    //   grunt.registerTask(path, function() {
+    grunt.file.expand('modules/'+module+'/img').forEach(function(path) {
+      mod = path.split('/')[1];
+      grunt.registerTask(path, function() {
+        // configure
+        grunt.config('copy:module_img.files.cwd', path);
+        grunt.config('copy:module_img.files.dest', '../build/debug/img/'+mod+'/');
 
-    //   })
-    // });
-    grunt.task.run('copy:'+mode+'_modules');
-  });
+        // run
+        grunt.task.run('copy:module_img');
+      })
+      grunt.task.run(path);
+    });
+  }
 
 
   // ----------------------------
@@ -339,13 +446,13 @@ module.exports = function(grunt) {
     module = module || '**';
 
         // check html
-    var watch_html = ['packages/modules/'+module+'/html/*.jade', 'packages/modules/'+module+'/html/*.json'],
+    var watch_html = ['modules/'+module+'/html/*.jade', 'modules/'+module+'/html/*.json'],
         // check js
-        watch_js = ['packages/modules/'+module+'/js/*.js'],
+        watch_js = ['modules/'+module+'/js/*.js'],
         // check style
-        watch_style = ['packages/modules/'+module+'/style/*.scss'],
+        watch_style = ['modules/'+module+'/style/*.scss'],
         // check imgs
-        watch_imgs = ['packages/modules/'+module+'/img/*.*'];
+        watch_imgs = ['modules/'+module+'/img/*.*'];
 
     var html_task = ['html:'+module],
         js_task = ['js:'+module],

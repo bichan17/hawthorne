@@ -5,3 +5,9 @@ mixin css_module(fileName)
 mixin js_module(fileName)
   url = "js/modules/"+fileName+".js"
   script(src=url)
+
+mixin partial(m, d)
+  if ( m && d && m != true && d != true )
+    data = locals.data(d)
+    e = {"locals":locals, "data":data}
+    !{locals.partial('modules/' + m, e)}

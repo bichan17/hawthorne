@@ -175,11 +175,26 @@ module.exports = function(grunt) {
       img: {
         files : [{expand: true, cwd: 'img', src: ['**'], dest: '../build/debug/img'}]
       },
-      module_img: {
-        files: [{expand: true, src: ['**']}]
-      },
+      // module_img: {
+      //   files: [{expand: true, src: ['**']}]
+      // },
       js: {
         files : [{expand: true, cwd: 'js', src: ['**'], dest: '../build/debug/js'}]
+      },
+      module_js: {
+        files: [{expand: true, cwd: 'modules', src: ['**/js/*.js'], dest: '../build/debug/js/modules/'}]
+
+        // go through every module folder
+        // files : function() {
+        //   var module, array = [];
+
+        //   // copy all js
+        //   grunt.file.expand('modules/**/js').forEach(function(path) {
+        //     module = path.split('/')[1];
+        //     array.push({expand: true, cwd: path, src: ['**'], dest: '../build/debug/js/modules/'});
+        //   });
+        //   return array;
+        // }
       },
       debug_modules : {
        // go through every module folder
@@ -290,6 +305,10 @@ module.exports = function(grunt) {
         files: ['js/*.js', 'js/**/*.js'],
         tasks: ['copy:js']
       },
+      module_js:{
+        files: ['modules/**/js/*.js'],
+        tasks: ['js']
+      },
       docs: {
         files: ['docs/**/*.*'],
         tasks: ['docs']
@@ -297,14 +316,9 @@ module.exports = function(grunt) {
       pages: {
         files: ['pages/*.jade'],
         tasks: ['pages']
-      },
-
-      //,
-      // js:{
-      //   files: ['modules/**/js/*.js'],
-      //   tasks: ['js']
-      // }
+      }
     }
+
   });
 
 
@@ -334,6 +348,8 @@ module.exports = function(grunt) {
       'css',
       'copy:font',
       'copy:debug_modules',
+      'copy:js',
+      'js',
       'jade:debug_pages',
       'jade:modules',
       'jade:index',
@@ -351,7 +367,7 @@ module.exports = function(grunt) {
       'jade:deploy',
       'docs'
     ]);
-  })
+  });
 
   // compile stuff in 'docs'
   grunt.registerTask('docs', 'update docs/ folder', function() {
@@ -383,6 +399,28 @@ module.exports = function(grunt) {
       // run it
       grunt.task.run(path);
     });
+  });
+
+
+  // copy module JS
+  grunt.registerTask('js', function(module) {
+    module = module || '**';
+    var mode = grunt.option('deploy') ? 'deploy' : 'debug';
+    var modules = [];
+
+    // go through every module, or the one passed
+    grunt.file.expand('modules/'+module+'/js').forEach(function(path) {
+      mod = path.split('/')[1];
+      modules.push({
+        expand: true,
+        cwd: path,
+        src: ['*.js'],
+        dest: '../build/'+mode+'/js/modules'
+      });
+    });
+
+    grunt.config('copy.module_js.files', modules);
+    grunt.task.run('copy:module_js');
   });
 
 

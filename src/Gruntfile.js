@@ -32,10 +32,10 @@ module.exports = function(grunt) {
             return a.match(/-demo.html/g)});
         },
         data: function(path){
-          return jadeconfig.data.data(path);
+          return jadedebug.data.data(path);
         },
         partial: function(templatePath, dataObj){
-          return jadeconfig.data.partial(templatePath, dataObj);
+          return jadedebug.data.partial(templatePath, dataObj);
         }
 
       }
@@ -74,10 +74,10 @@ module.exports = function(grunt) {
             return a.match(/-demo.html/g)});
         },
         data: function(path){
-          return jadeconfig.data.data(path);
+          return jadedeploy.data.data(path);
         },
         partial: function(templatePath, dataObj){
-          return jadeconfig.data.partial(templatePath, dataObj);
+          return jadedeploy.data.partial(templatePath, dataObj);
         }
 
       }
